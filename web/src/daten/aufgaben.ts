@@ -1,18 +1,28 @@
 import Dexie from 'dexie';
+import { naechsteFarbe } from '../logik/farben.ts';
 import { db, type Aufgabe } from './db.ts';
 
 const nachEingabe = (a: Aufgabe, b: Aufgabe) => a.erstellt_am - b.erstellt_am || (a.id ?? 0) - (b.id ?? 0);
 
+/** Legt eine Aufgabe an, mit einer Farbe, die sich von den anderen offenen Aufgaben des Tages unterscheidet. */
 export async function hinzufuegen(text: string, tag: number, jetzt = Date.now()): Promise<void> {
   const bereinigt = text.trim();
   if (!bereinigt) return;
-  await db.aufgaben.add({
-    text: bereinigt.charAt(0).toLocaleUpperCase('de') + bereinigt.slice(1),
-    datum: tag,
-    urspruengliches_datum: tag,
-    erledigt: 0,
-    erledigt_am: null,
-    erstellt_am: jetzt,
+  await db.transaction('rw', db.aufgaben, async () => {
+    const amTag = await db.aufgaben.where('[erledigt+datum]').equals([0, tag]).toArray();
+    const zuletzt = await db.aufgaben.orderBy(':id').last();
+    await db.aufgaben.add({
+      text: bereinigt.charAt(0).toLocaleUpperCase('de') + bereinigt.slice(1),
+      datum: tag,
+      urspruengliches_datum: tag,
+      erledigt: 0,
+      erledigt_am: null,
+      erstellt_am: jetzt,
+      farbe: naechsteFarbe(
+        amTag.map((a) => a.farbe),
+        zuletzt?.farbe ?? null,
+      ),
+    });
   });
 }
 

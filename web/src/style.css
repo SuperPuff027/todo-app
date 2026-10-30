@@ -1,6 +1,20 @@
-/* Minimal und weich: keine eckigen Kanten, wenig Farbe, eine Akzentfarbe (Salbeigrün). */
+/*
+ * Minimal und weich: keine eckigen Kanten, eine Akzentfarbe (Salbeigrün) für Knöpfe,
+ * dazu je Aufgabe eine eigene Farbe (--farbe-0 … --farbe-9).
+ * Darstellung: automatisch nach System, oder fest über data-theme="light" / "dark" am <html>.
+ */
 :root {
   color-scheme: light dark;
+  --farbe-0: #c2532f;
+  --farbe-1: #b7791f;
+  --farbe-2: #6b8e23;
+  --farbe-3: #2e8b57;
+  --farbe-4: #138a8a;
+  --farbe-5: #2f7fc1;
+  --farbe-6: #5a5fc8;
+  --farbe-7: #8a4fc0;
+  --farbe-8: #c2408a;
+  --farbe-9: #c24156;
   --hintergrund: #f6f5f2;
   --flaeche: #e8e6e1;
   --flaeche-leicht: #f1f0ec;
@@ -27,8 +41,13 @@
   --schrift-klein: 0.8125rem;
 }
 
+:root[data-theme='light'] {
+  color-scheme: light;
+}
+
+/* Dunkle Farben zweimal: automatisch (System dunkel, nicht fest auf hell) und fest auf dunkel. */
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme='light']) {
     --hintergrund: #151716;
     --flaeche: #262927;
     --flaeche-leicht: #1a1c1b;
@@ -45,7 +64,47 @@
     --auf-dunkel: #2f302e;
     --hinweis-aktion: #2f6b5e;
     --schatten: 0 6px 20px rgb(0 0 0 / 0.5);
+    --farbe-0: #f2957a;
+    --farbe-1: #f0c062;
+    --farbe-2: #b5d36a;
+    --farbe-3: #7fd3a2;
+    --farbe-4: #6fd6d3;
+    --farbe-5: #8cc4f2;
+    --farbe-6: #a9acf5;
+    --farbe-7: #cfa4f2;
+    --farbe-8: #f29cc9;
+    --farbe-9: #f39aa8;
   }
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --hintergrund: #151716;
+  --flaeche: #262927;
+  --flaeche-leicht: #1a1c1b;
+  --text: #e6e4df;
+  --text-leise: #a3a19c;
+  --rand: #3a3d3b;
+  --rand-kraeftig: #6e716f;
+  --akzent: #8fcfbd;
+  --auf-akzent: #0f2a24;
+  --akzent-hell: #1f4a41;
+  --warm: #4a2a18;
+  --auf-warm: #f8e3d6;
+  --dunkel: #e6e4df;
+  --auf-dunkel: #2f302e;
+  --hinweis-aktion: #2f6b5e;
+  --schatten: 0 6px 20px rgb(0 0 0 / 0.5);
+  --farbe-0: #f2957a;
+  --farbe-1: #f0c062;
+  --farbe-2: #b5d36a;
+  --farbe-3: #7fd3a2;
+  --farbe-4: #6fd6d3;
+  --farbe-5: #8cc4f2;
+  --farbe-6: #a9acf5;
+  --farbe-7: #cfa4f2;
+  --farbe-8: #f29cc9;
+  --farbe-9: #f39aa8;
 }
 
 * {
@@ -259,11 +318,13 @@ h2 {
   }
 }
 
+/* Jede Karte in ihrer Farbe --k (am <li> gesetzt): dünne Umrandung, durchscheinende Füllung. */
 .karte {
   display: flex;
   align-items: center;
   gap: 4px;
-  background: var(--flaeche);
+  border: 1.5px solid var(--k, var(--rand-kraeftig));
+  background: color-mix(in srgb, var(--k, var(--rand-kraeftig)) 14%, transparent);
   border-radius: var(--rund-karte);
   padding: 6px 18px 6px 6px;
 }
@@ -280,7 +341,7 @@ h2 {
   width: 28px;
   height: 28px;
   border-radius: 50%;
-  border: 2px solid var(--rand-kraeftig);
+  border: 2px solid var(--k, var(--rand-kraeftig));
   display: grid;
   place-items: center;
   color: transparent;
@@ -297,9 +358,9 @@ h2 {
 }
 .abgehakt .kreis,
 .weg .kreis {
-  background: var(--akzent);
-  border-color: var(--akzent);
-  color: var(--auf-akzent);
+  background: var(--k, var(--akzent));
+  border-color: var(--k, var(--akzent));
+  color: var(--hintergrund);
 }
 .abgehakt .kreis svg,
 .weg .kreis svg {
@@ -402,6 +463,17 @@ h2 {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+/* Farbpunkt der Aufgabe vor jeder Zeile */
+.kachel-zeile::before {
+  content: '';
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  margin-right: 7px;
+  border-radius: 50%;
+  background: var(--k, var(--rand-kraeftig));
+  vertical-align: 1px;
 }
 .zahl {
   min-width: 28px;

@@ -1,9 +1,13 @@
 import { useState } from 'preact/hooks';
 import type { Aufgabe } from '../daten/db.ts';
+import { farbVariable } from '../logik/farben.ts';
 import { offenLabel, tageOffen } from '../logik/kalender.ts';
 import { IconHaken } from './icons.tsx';
 
-/** Eine Aufgabe als abgerundete Karte. Tipp auf den runden Haken: kurz gefüllter Haken, dann gleitet die Karte weg. */
+/**
+ * Eine Aufgabe als abgerundete Karte in ihrer eigenen Farbe (dünne Umrandung, durchscheinende Füllung).
+ * Tipp auf den runden Haken: kurz gefüllter Haken, dann gleitet die Karte weg.
+ */
 export function AufgabeKarte({ aufgabe, onErledigen }: { aufgabe: Aufgabe; onErledigen: () => void }) {
   const [zustand, setZustand] = useState<'offen' | 'abgehakt' | 'weg'>('offen');
   const label = offenLabel(tageOffen(aufgabe.datum, aufgabe.urspruengliches_datum, aufgabe.erstellt_am));
@@ -16,7 +20,7 @@ export function AufgabeKarte({ aufgabe, onErledigen }: { aufgabe: Aufgabe; onErl
   };
 
   return (
-    <li class={`karte-huelle ${zustand}`}>
+    <li class={`karte-huelle ${zustand}`} style={`--k: ${farbVariable(aufgabe.farbe)}`}>
       <div class="karte">
         <button
           class="haken"

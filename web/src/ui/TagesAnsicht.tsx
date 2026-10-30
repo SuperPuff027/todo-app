@@ -2,7 +2,8 @@ import type { ComponentChildren } from 'preact';
 import type { Aufgabe } from '../daten/db.ts';
 import { tagUndMonat, wochentag } from '../logik/kalender.ts';
 import { AufgabeKarte } from './AufgabeKarte.tsx';
-import { IconKalender } from './icons.tsx';
+import { DARSTELLUNG_NAME, type Darstellung } from './darstellung.ts';
+import { IconAuto, IconKalender, IconMond, IconSonne } from './icons.tsx';
 
 interface Props {
   tag: number;
@@ -13,12 +14,14 @@ interface Props {
   onWoche: () => void;
   onHeute: () => void;
   onErinnerung: () => void;
+  darstellung: Darstellung;
+  onDarstellung: () => void;
   /** Hinweise unter der Kopfzeile (Installieren, Benachrichtigungen). */
   hinweise?: ComponentChildren;
 }
 
 /** Die Liste eines Tages, bildschirmfüllend. */
-export function TagesAnsicht({ tag, heute, aufgaben, erinnerung, onErledigen, onWoche, onHeute, onErinnerung, hinweise }: Props) {
+export function TagesAnsicht({ tag, heute, aufgaben, erinnerung, onErledigen, onWoche, onHeute, onErinnerung, darstellung, onDarstellung, hinweise }: Props) {
   const istHeute = tag === heute;
   return (
     <section class="seite">
@@ -37,6 +40,9 @@ export function TagesAnsicht({ tag, heute, aufgaben, erinnerung, onErledigen, on
             )}
           </p>
         </div>
+        <button class="rundknopf" onClick={onDarstellung} aria-label={`Darstellung: ${DARSTELLUNG_NAME[darstellung]}, tippen zum Wechseln`}>
+          {darstellung === 'hell' ? <IconSonne /> : darstellung === 'dunkel' ? <IconMond /> : <IconAuto />}
+        </button>
         <button class="rundknopf" onClick={onWoche} aria-label="Wochenübersicht">
           <IconKalender />
         </button>

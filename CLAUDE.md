@@ -34,6 +34,8 @@ Zweite Fassung als offline-fähige PWA, weil die APK auf dem Handy des Nutzers n
 - Einstellungen liegen in IndexedDB (nicht localStorage), damit der Service Worker sie lesen kann.
 - Veröffentlicht über `.github/workflows/pages.yml` auf https://superpuff027.github.io/todo-app/ (nur bei Änderungen in `web/`). Die APK-Action ignoriert `web/`.
 - Grenzen: kein Widget (Ersatz: App-Verknüpfungen im Manifest); Erinnerung im Hintergrund nur über Periodic Background Sync (Chrome, installierte App, Takt bestimmt Android), sonst beim Öffnen; Spracheingabe über Web Speech API braucht Netz, offline Hinweis auf Tastatur-Mikrofon.
+- Aufgabenfarben (Wunsch des Nutzers): jede Aufgabe hat `farbe` (0–9), beim Anlegen so gewählt, dass sie sich von den offenen Aufgaben des Tages unterscheidet (`logik/farben.ts`). Darstellung: dünne Umrandung + durchscheinende Füllung (14 %). Palette `--farbe-0…9` in `style.css`, je eine helle und dunkle Variante. Nur in der Web-App, nicht in der Android-App.
+- Darstellung umschaltbar (Automatisch → Hell → Dunkel) über den Knopf in der Tagesansicht; `data-theme` am `<html>`, Wahl in localStorage. Kein `light-dark()` (zu neu für ältere Android-Browser).
 - Icons erzeugt `npm run icons` (`web/skripte/icons.mjs`).
 - Lokal unter Git Bash `BASE_PATH` nicht setzen (MSYS macht daraus einen Windows-Pfad); in CI setzt der Workflow ihn.
 

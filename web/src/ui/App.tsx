@@ -4,6 +4,7 @@ import type { Aufgabe } from '../daten/db.ts';
 import { leseErinnerung, setzeErinnerung, STANDARD_ERINNERUNG } from '../daten/einstellungen.ts';
 import { ERINNERUNG_TAG, pruefeErinnerung } from '../daten/erinnerung.ts';
 import { epochTag, wochenStart as wochenStartVon } from '../logik/kalender.ts';
+import { DARSTELLUNG_NAME, leseDarstellung, naechsteDarstellung, wendeDarstellungAn, type Darstellung } from './darstellung.ts';
 import { Eingabe } from './Eingabe.tsx';
 import { ErinnerungDialog } from './ErinnerungDialog.tsx';
 import { IconMikrofon, IconPlus } from './icons.tsx';
@@ -72,6 +73,7 @@ export function App() {
   const [erlaubnis, setErlaubnis] = useState<Erlaubnis>(erlaubnisJetzt);
   const [hinweis, setHinweis] = useState<Hinweis | null>(null);
   const [installieren, setInstallieren] = useState<InstallAufforderung | null>(null);
+  const [darstellung, setDarstellung] = useState<Darstellung>(leseDarstellung);
 
   const aufgaben = useLive(() => offeneAmTag(tag), [tag], [] as Aufgabe[]);
   const woche = useLive(() => offeneZwischen(wochenStart, wochenStart + 6), [wochenStart], [] as Aufgabe[]);
@@ -246,6 +248,13 @@ export function App() {
             onWoche={zurWoche}
             onHeute={zuHeute}
             onErinnerung={() => setDialog(true)}
+            darstellung={darstellung}
+            onDarstellung={() => {
+              const neu = naechsteDarstellung(darstellung);
+              wendeDarstellungAn(neu);
+              setDarstellung(neu);
+              zeige(`Darstellung: ${DARSTELLUNG_NAME[neu]}`);
+            }}
             hinweise={hinweise}
           />
         ) : (

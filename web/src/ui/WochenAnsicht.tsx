@@ -1,4 +1,5 @@
 import type { Aufgabe } from '../daten/db.ts';
+import { farbVariable } from '../logik/farben.ts';
 import { kalenderwoche, tagUndMonatKurz, wocheAb, wochenStart as wochenStartVon, wochenspanne, wochentag } from '../logik/kalender.ts';
 
 interface Props {
@@ -55,7 +56,7 @@ export function WochenAnsicht({ wochenStart, heute, aufgaben, onTag, onVerschieb
                   {offen.length > 0 && <span class="zahl">{offen.length}</span>}
                 </span>
                 {offen.slice(0, 3).map((a) => (
-                  <span key={a.id} class="kachel-zeile">
+                  <span key={a.id} class="kachel-zeile" style={`--k: ${farbVariable(a.farbe)}`}>
                     {a.text}
                   </span>
                 ))}

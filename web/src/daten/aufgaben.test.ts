@@ -49,6 +49,18 @@ describe('aufgaben', () => {
     expect(await uebertragen(MONTAG + 3)).toBe(0);
   });
 
+  it('gibt jeder neuen Aufgabe eines Tages eine andere Farbe', async () => {
+    for (const text of ['A', 'B', 'C', 'D']) await hinzufuegen(text, MONTAG);
+    const farben = (await offeneAmTag(MONTAG)).map((a) => a.farbe);
+    expect(new Set(farben).size).toBe(4);
+    // Nach dem Erledigen wird die frei gewordene Farbe wieder genutzt, statt eine doppelt zu vergeben
+    const [erste] = await offeneAmTag(MONTAG);
+    await erledigen(erste!.id!);
+    await hinzufuegen('E', MONTAG);
+    const danach = (await offeneAmTag(MONTAG)).map((a) => a.farbe);
+    expect(new Set(danach).size).toBe(4);
+  });
+
   it('liefert eine Woche nach Tag sortiert', async () => {
     await hinzufuegen('Mi', MONTAG + 2, 1);
     await hinzufuegen('Mo', MONTAG, 2);
