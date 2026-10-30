@@ -3,6 +3,10 @@ name: APK bauen
 on:
   push:
     branches: [main]
+    # Die Web-App (web/) hat ihren eigenen Workflow.
+    paths-ignore:
+      - 'web/**'
+      - '.github/workflows/pages.yml'
   workflow_dispatch:
 
 permissions:

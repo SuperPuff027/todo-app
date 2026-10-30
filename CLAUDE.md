@@ -27,6 +27,16 @@ Projekt-Brief: Claude-Docs-Dokument „Project Brief: To-Do-App (Android)“, ht
 - Erinnerung (Standard 18:00, einstellbar) nur, wenn heute noch etwas offen ist.
 - Design: minimal, keine eckigen Kanten, eine Akzentfarbe, Dark Mode nach System.
 
+## Web-App (`web/`)
+Zweite Fassung als offline-fähige PWA, weil die APK auf dem Handy des Nutzers nicht installierbar war. Gleiche fachliche Regeln und Feldnamen wie die Android-App.
+- Stack wie olivenernte-app: Vite + TypeScript (strict), Preact, Dexie (IndexedDB), `vite-plugin-pwa` mit eigenem Service Worker (`src/sw.ts`, injectManifest), Vitest. `npm run check` = Typecheck + Lint + Tests.
+- Reine Logik in `web/src/logik/` mit Tests; Datenzugriff in `web/src/daten/` (Tests mit fake-indexeddb).
+- Einstellungen liegen in IndexedDB (nicht localStorage), damit der Service Worker sie lesen kann.
+- Veröffentlicht über `.github/workflows/pages.yml` auf https://superpuff027.github.io/todo-app/ (nur bei Änderungen in `web/`). Die APK-Action ignoriert `web/`.
+- Grenzen: kein Widget (Ersatz: App-Verknüpfungen im Manifest); Erinnerung im Hintergrund nur über Periodic Background Sync (Chrome, installierte App, Takt bestimmt Android), sonst beim Öffnen; Spracheingabe über Web Speech API braucht Netz, offline Hinweis auf Tastatur-Mikrofon.
+- Icons erzeugt `npm run icons` (`web/skripte/icons.mjs`).
+- Lokal unter Git Bash `BASE_PATH` nicht setzen (MSYS macht daraus einen Windows-Pfad); in CI setzt der Workflow ihn.
+
 ## Getroffene Standards für offene Fragen im Brief
 - Eine Erinnerung pro Tag zur eingestellten Uhrzeit.
 - Erledigte Aufgaben werden ausgeblendet, nicht gelöscht.
