@@ -1,9 +1,11 @@
 package de.superpuff.todo.logik
 
 import java.time.DayOfWeek
+import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
+import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.time.temporal.TemporalAdjusters
 import java.time.temporal.WeekFields
@@ -23,8 +25,16 @@ object Kalender {
     /** ISO-Kalenderwoche (Woche 1 enthält den ersten Donnerstag des Jahres). */
     fun kalenderwoche(tag: LocalDate): Int = tag.get(WeekFields.ISO.weekOfWeekBasedYear())
 
-    /** Ganze Tage, die eine Aufgabe schon übertragen wurde. Nie negativ. */
-    fun tageOffen(datum: Long, urspruenglichesDatum: Long): Int = (datum - urspruenglichesDatum).coerceAtLeast(0L).toInt()
+    /**
+     * Tage für das Label „seit X Tagen offen“: Abstand von `erstellt_am` bis zum aktuellen Tag der Aufgabe
+     * (nach dem Übertrag ist das heute). 0, solange die Aufgabe noch an ihrem geplanten Tag steht,
+     * damit vorausgeplante Aufgaben kein Label bekommen.
+     */
+    fun tageOffen(datum: Long, urspruenglichesDatum: Long, erstelltAm: Long, zone: ZoneId = ZoneId.systemDefault()): Int {
+        if (datum <= urspruenglichesDatum) return 0
+        val erstelltTag = Instant.ofEpochMilli(erstelltAm).atZone(zone).toLocalDate().toEpochDay()
+        return (datum - erstelltTag).coerceAtLeast(1L).toInt()
+    }
 
     /** Label für übertragene Aufgaben, oder `null`, wenn die Aufgabe noch an ihrem geplanten Tag steht. */
     fun offenLabel(tage: Int): String? = when {

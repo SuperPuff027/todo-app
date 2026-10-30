@@ -1,4 +1,4 @@
-# To-Do-App
+# ToDo (Repo todo-app)
 
 Persönliche To-Do-App für ein Android-Handy. Nur ein Nutzer, kein Konto, kein Sync, kein Store. Native App (nicht PWA wie CJ6-Repair und olivenernte-app), weil Homescreen-Widget und Erinnerung bei geschlossener App gebraucht werden.
 
@@ -15,14 +15,14 @@ Projekt-Brief: Claude-Docs-Dokument „Project Brief: To-Do-App (Android)“, ht
 ## Stack
 - Kotlin, Jetpack Compose, Material 3, minSdk 26, targetSdk 35
 - Room (SQLite) lokal, Jetpack Glance für das Widget
-- Spracheingabe über `RecognizerIntent` (System-Spracherkennung)
+- Spracheingabe direkt in der App über `SpeechRecognizer` (Mikrofon antippen oder gedrückt halten, Zwischenergebnisse live im Feld); ohne Mikrofon-Erlaubnis oder Erkennungsdienst Rückfall auf den Systemdialog (`RecognizerIntent`)
 - AlarmManager (`setAndAllowWhileIdle`) für Erinnerung und Mitternachts-Übertrag
 - Signatur: fester Schlüssel in `app/signatur/`, damit jede APK über die vorige installiert werden kann
 
 ## Fachliche Regeln
 - Tage als Epoch-Tag (`LocalDate.toEpochDay()`).
 - Unerledigte Aufgaben wandern um Mitternacht auf heute (`datum` ändert sich, `urspruengliches_datum` nicht). Übertrag auch bei App-Start, Neustart und vor jeder Erinnerung.
-- Label „seit X Tagen offen“ = `datum - urspruengliches_datum`.
+- Label „seit X Tagen offen“ nur bei übertragenen Aufgaben (`datum > urspruengliches_datum`); X = `datum` minus Tag von `erstellt_am` (wie im Brief).
 - Erledigte Aufgaben verschwinden aus allen Ansichten, bleiben aber gespeichert (`erledigt`, `erledigt_am`).
 - Erinnerung (Standard 18:00, einstellbar) nur, wenn heute noch etwas offen ist.
 - Design: minimal, keine eckigen Kanten, eine Akzentfarbe, Dark Mode nach System.

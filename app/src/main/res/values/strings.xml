@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">To-Do</string>
-    <string name="widget_name">To-Do heute</string>
+    <string name="app_name">ToDo</string>
+    <string name="widget_name">ToDo heute</string>
     <string name="widget_beschreibung">Offene Aufgaben von heute, direkt abhaken</string>
     <string name="kanal_name">Erinnerungen</string>
     <string name="kanal_beschreibung">Hinweis, wenn am Tag noch Aufgaben offen sind</string>

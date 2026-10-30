@@ -11,9 +11,10 @@ import androidx.room.PrimaryKey
  *
  * @property datum Tag, an dem die Aufgabe aktuell steht. Wird beim Übertrag um Mitternacht auf heute gesetzt.
  * @property urspruenglichesDatum Tag, für den die Aufgabe ursprünglich geplant war. Bleibt beim Übertrag gleich;
- *   `datum - urspruenglichesDatum` ergibt die Tage im Label „seit X Tagen offen“.
+ *   Ist `datum` größer, wurde die Aufgabe übertragen und bekommt das Label „seit X Tagen offen“.
  * @property erledigt Erledigte Aufgaben verschwinden aus allen Ansichten, bleiben aber in der Datenbank.
- * @property erstelltAm Zeitpunkt der Eingabe in Millisekunden, legt auch die Reihenfolge fest.
+ * @property erstelltAm Zeitpunkt der Eingabe in Millisekunden, bleibt unverändert. Legt die Reihenfolge fest;
+ *   der Abstand vom Eingabetag bis `datum` ergibt das X im Label.
  */
 @Entity(tableName = "aufgaben")
 data class Aufgabe(

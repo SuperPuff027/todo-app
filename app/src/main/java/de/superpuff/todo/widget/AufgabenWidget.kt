@@ -171,7 +171,7 @@ private fun WidgetInhalt(heute: LocalDate, aufgaben: List<Aufgabe>) {
 
 @Composable
 private fun WidgetZeile(aufgabe: Aufgabe) {
-    val label = Kalender.offenLabel(Kalender.tageOffen(aufgabe.datum, aufgabe.urspruenglichesDatum))
+    val label = Kalender.offenLabel(Kalender.tageOffen(aufgabe.datum, aufgabe.urspruenglichesDatum, aufgabe.erstelltAm))
     Column(modifier = GlanceModifier.fillMaxWidth().padding(bottom = 6.dp)) {
         Row(
             modifier = GlanceModifier

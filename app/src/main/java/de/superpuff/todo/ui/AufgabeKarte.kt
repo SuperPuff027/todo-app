@@ -51,7 +51,7 @@ fun AufgabeKarte(
 ) {
     var abgehakt by remember(aufgabe.id) { mutableStateOf(false) }
     val bereich = rememberCoroutineScope()
-    val label = Kalender.offenLabel(Kalender.tageOffen(aufgabe.datum, aufgabe.urspruenglichesDatum))
+    val label = Kalender.offenLabel(Kalender.tageOffen(aufgabe.datum, aufgabe.urspruenglichesDatum, aufgabe.erstelltAm))
 
     Surface(
         shape = MaterialTheme.shapes.medium,

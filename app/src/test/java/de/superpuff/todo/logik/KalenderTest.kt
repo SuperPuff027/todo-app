@@ -6,6 +6,7 @@ import org.junit.Test
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
+import java.time.ZoneId
 
 class KalenderTest {
 
@@ -33,10 +34,21 @@ class KalenderTest {
     }
 
     @Test
-    fun tageOffenNieNegativ() {
-        assertEquals(0, Kalender.tageOffen(100, 100))
-        assertEquals(3, Kalender.tageOffen(103, 100))
-        assertEquals(0, Kalender.tageOffen(99, 100))
+    fun tageOffenZaehltAbErstelltAm() {
+        val zone = ZoneId.of("Europe/Berlin")
+        val montag = LocalDate.of(2026, 10, 26)
+        // Montag 21:30 eingetragen
+        val erstellt = montag.atTime(21, 30).atZone(zone).toInstant().toEpochMilli()
+        val mo = montag.toEpochDay()
+
+        // Noch am geplanten Tag: kein Label
+        assertEquals(0, Kalender.tageOffen(mo, mo, erstellt, zone))
+        // Für Montag geplant, am Donnerstag noch offen: seit 3 Tagen
+        assertEquals(3, Kalender.tageOffen(mo + 3, mo, erstellt, zone))
+        // Am Montag für Mittwoch geplant, am Freitag noch offen: zählt ab Eintrag (Montag), also 4
+        assertEquals(4, Kalender.tageOffen(mo + 4, mo + 2, erstellt, zone))
+        // Vorausgeplant und noch nicht fällig: kein Label
+        assertEquals(0, Kalender.tageOffen(mo + 2, mo + 2, erstellt, zone))
     }
 
     @Test

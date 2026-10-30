@@ -3,9 +3,14 @@
 
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <!-- Spracheingabe direkt in der App (SpeechRecognizer). Ohne Erlaubnis bleibt der Systemdialog als Rückfall. -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
     <!-- Nötig ab Android 11, damit die App die Spracherkennung des Systems findet. -->
     <queries>
+        <intent>
+            <action android:name="android.speech.RecognitionService" />
+        </intent>
         <intent>
             <action android:name="android.speech.action.RECOGNIZE_SPEECH" />
         </intent>
